@@ -50,7 +50,7 @@ class SpringyFlowLayout: UICollectionViewFlowLayout {
             
             let anchorPoint = behavior.anchorPoint
             let distanceFromTouch = touchLocation.y - anchorPoint.y
-            let scrollResistance = distanceFromTouch / 250
+            let scrollResistance = distanceFromTouch / 150
             
             var center = item.center
             center.y += min(scrollDelta, scrollResistance)
