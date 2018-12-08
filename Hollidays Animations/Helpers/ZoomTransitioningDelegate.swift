@@ -17,7 +17,7 @@ protocol ZoomingViewController {
 
 enum TransitionState {
     
-    case inital
+    case initial
     case final
 }
 
@@ -28,19 +28,20 @@ class ZoomTransitioningDelegate: NSObject {
     private let zoomScale = CGFloat(15)
     private let backgroundScale = CGFloat(0.7)
     
-    typealias ZoomingView = (otherView: UIView, imageView: UIView)
+    typealias ZoomingViews = (otherView: UIView, imageView: UIView)
     
-    func configureViews(for state: TransitionState, containerView: UIView, backgroundViewController: UIViewController, viewsInBackground: ZoomingView, viewsInForeground: ZoomingView, snapshotViews: ZoomingView) {
-        
+    func configureViews(for state: TransitionState, containerView: UIView, backgroundViewController: UIViewController, viewsInBackground: ZoomingViews, viewsInForeground: ZoomingViews, snapshotViews: ZoomingViews)
+    {
         switch state {
-        case .inital:
-//            backgroundViewController.view.transform = CGAffineTransform.identity
-            backgroundViewController.view.alpha = 1.0
+        case .initial:
+            backgroundViewController.view.transform = CGAffineTransform.identity
+            backgroundViewController.view.alpha = 1
             
             snapshotViews.imageView.frame = containerView.convert(viewsInBackground.imageView.frame, from: viewsInBackground.imageView.superview)
+            
         case .final:
-//            backgroundViewController.view.transform = CGAffineTransform(scaleX: backgroundScale, y: backgroundScale)
-            backgroundViewController.view.alpha = 0.0
+            backgroundViewController.view.transform = CGAffineTransform(scaleX: backgroundScale, y: backgroundScale)
+            backgroundViewController.view.alpha = 0
             
             snapshotViews.imageView.frame = containerView.convert(viewsInForeground.imageView.frame, from: viewsInForeground.imageView.superview)
         }
@@ -54,10 +55,11 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let duration = transitionDuration(using: transitionContext)
-        let fromViewController = transitionContext.viewController(forKey: .from)!
-        let toViewController = transitionContext.viewController(forKey: .to)!
-        let containerView = transitionContext.containerView
+
+        guard let fromViewController = transitionContext.viewController(forKey: .from),
+              let toViewController = transitionContext.viewController(forKey: .to) else {
+            return
+        }
         
         var backgroundViewController = fromViewController
         var foregroundViewController = toViewController
@@ -70,11 +72,10 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         let maybeBackgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self)
         let maybeForegroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self)
         
-        assert(maybeBackgroundImageView != nil, "Cannot find image in backgroundVC")
-        assert(maybeForegroundImageView != nil, "Cannot find image in foregroundVC")
-        
-        let backgroundImageView = maybeBackgroundImageView!
-        let foregroundImageView = maybeForegroundImageView!
+        guard let backgroundImageView = maybeBackgroundImageView,
+              let foregroundImageView = maybeForegroundImageView else {
+            return
+        }
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.contentMode = .scaleAspectFill
@@ -82,33 +83,35 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         backgroundImageView.isHidden = true
         foregroundImageView.isHidden = true
-        
         let foregroundViewBackgroundColor = foregroundViewController.view.backgroundColor
-        foregroundViewController.view.backgroundColor = .clear
-        containerView.backgroundColor = .white
+        foregroundViewController.view.backgroundColor = UIColor.clear
         
+        let containerView = transitionContext.containerView
+        containerView.backgroundColor = UIColor.white
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
         containerView.addSubview(imageViewSnapshot)
         
-        var preTransitionState = TransitionState.inital
+        var preTransitionState = TransitionState.initial
         var postTransitionState = TransitionState.final
         
         if operation == .pop {
-            preTransitionState =  .final
-            postTransitionState = .inital
+            preTransitionState = .final
+            postTransitionState = .initial
         }
         
-        self.configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
+        configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
         
         foregroundViewController.view.layoutIfNeeded()
         
-        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+        let duration = transitionDuration(using: transitionContext)
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0, options: [], animations: {
             
             self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
+            
         }) { (finished) in
             
-            backgroundImageView.transform = CGAffineTransform.identity
+            backgroundViewController.view.transform = CGAffineTransform.identity
             imageViewSnapshot.removeFromSuperview()
             backgroundImageView.isHidden = false
             foregroundImageView.isHidden = false
