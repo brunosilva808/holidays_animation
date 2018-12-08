@@ -19,6 +19,7 @@ class DetailViewController: UIViewController {
     
     let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleToFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -28,6 +29,8 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = .red
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTouched))
+        self.imageView.addGestureRecognizer(tapGesture)
         setupViews()
     }
     
@@ -38,4 +41,19 @@ class DetailViewController: UIViewController {
         self.view.addConstraintsWithFormat("V:|[v0]|", views: imageView)
     }
 
+    @objc func imageTouched() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+}
+
+extension DetailViewController: ZoomingViewController {
+    
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        return self.imageView
+    }
+    
+    func zoomingBackgroundImageView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil 
+    }
 }
