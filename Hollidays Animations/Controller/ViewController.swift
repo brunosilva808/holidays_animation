@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
+    let zoomDelegate = ZoomTransitioningDelegate()
+    var selectedIndexPath: IndexPath!
     var array: [Holiday] = [Holiday(imageName: "1"),
                             Holiday(imageName: "2"),
                             Holiday(imageName: "3"),
@@ -52,6 +54,15 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         return self.array.count
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailViewController = DetailViewController()
+        detailViewController.model = array[indexPath.row]
+        self.navigationController?.delegate = zoomDelegate
+        self.navigationController?.pushViewController(detailViewController, animated: true)
+        
+        self.selectedIndexPath = indexPath
+    }
+    
 //    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 //
 //        cell.transform = CGAffineTransform(translationX: 0, y: cell.frame.height/2)
@@ -61,4 +72,20 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
 //        }, completion: nil)
 //    }
     
+}
+
+extension ViewController: ZoomingViewController {
+    
+    func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView? {
+        if let indexPath = self.selectedIndexPath {
+            let cell = collectionView.cellForItem(at: indexPath) as! CollectionCell
+            return cell.imageView
+        }
+        
+        return nil
+    }
+    
+    func zoomingBackgroundImageView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
 }
