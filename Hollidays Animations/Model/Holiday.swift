@@ -10,4 +10,6 @@ import Foundation
 
 struct Holiday {
     var imageName: String
+    var title: String
+    var description: String
 }
