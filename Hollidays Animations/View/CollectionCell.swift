@@ -37,7 +37,7 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
     }
     
     func setupViews() {
-        self.addSubview(imageView)
+        self.addSubview(self.imageView)
         
         self.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: imageView)
         self.addConstraintsWithFormat("V:|-8-[v0]-8-|", views: imageView)

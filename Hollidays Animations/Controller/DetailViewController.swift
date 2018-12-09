@@ -35,7 +35,7 @@ class DetailViewController: UIViewController {
     }
     
     func setupViews() {
-        self.view.addSubview(imageView)
+        self.view.addSubview(self.imageView)
         
         self.view.addConstraintsWithFormat("H:|[v0]|", views: imageView)
         self.view.addConstraintsWithFormat("V:|[v0]|", views: imageView)
