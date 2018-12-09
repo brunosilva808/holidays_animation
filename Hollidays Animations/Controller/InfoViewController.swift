@@ -36,7 +36,15 @@ class InfoViewController: UIViewController {
         setupViews()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.view.setRoundedCorners(toRadius: 15)
+        self.view.backgroundColor = .white
+    }
+    
     func setupViews() {
+        
         self.view.addSubview(self.titleLabel)
         self.view.addSubview(self.descriptionLabel)
         

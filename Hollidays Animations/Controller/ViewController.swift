@@ -10,7 +10,8 @@ import UIKit
 
 class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    let zoomDelegate = ZoomTransitioningDelegate()
+    lazy var zoomDelegate = ZoomTransitioningDelegate()
+    lazy var slideInTransitioningDelegate = SlideInPresentationManager()
     var selectedIndexPath: IndexPath!
     var array: [Holiday] = [
                             Holiday(imageName: "1", title: "Title 1", description: "O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro. Este texto não só sobreviveu 5 séculos, mas também o salto para a tipografia electrónica, mantendo-se essencialmente inalterada. Foi popularizada nos anos 60 com a disponibilização das folhas de Letraset, que continham passagens com Lorem Ipsum, e mais recentemente com os programas de publicação como o Aldus PageMaker que incluem versões do Lorem Ipsum."),
@@ -48,12 +49,23 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = DetailViewController()
-        detailViewController.model = array[indexPath.row]
-        self.navigationController?.delegate = zoomDelegate
-        self.navigationController?.pushViewController(detailViewController, animated: true)
         
-        self.selectedIndexPath = indexPath
+//        if true {
+            let infoViewController = InfoViewController()
+            infoViewController.model = array[indexPath.row]
+            infoViewController.transitioningDelegate = slideInTransitioningDelegate
+            infoViewController.modalPresentationStyle = .custom
+            self.present(infoViewController, animated: true) {
+                print("XPTO")
+            }
+//        } else {
+            let detailViewController = DetailViewController()
+            detailViewController.model = array[indexPath.row]
+            self.navigationController?.delegate = zoomDelegate
+            self.navigationController?.pushViewController(detailViewController, animated: true)
+            
+            self.selectedIndexPath = indexPath
+//        }
     }
     
 //    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
