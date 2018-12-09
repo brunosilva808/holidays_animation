@@ -34,6 +34,7 @@ class InfoViewController: UIViewController {
         super.viewDidLoad()
 
         setupViews()
+//        setupPanGesture()
     }
     
     override func viewDidLayoutSubviews() {
@@ -52,6 +53,31 @@ class InfoViewController: UIViewController {
         
         self.view.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: self.descriptionLabel)
         self.view.addConstraintsWithFormat("V:|-16-[v0(21)]-16-[v1]", views: self.titleLabel, self.descriptionLabel)
+    }
+    
+    func setupPanGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizer(_:)))
+        self.view.addGestureRecognizer(panGesture)
+    }
+    
+    @objc func panGestureRecognizer(_ gesture: UIPanGestureRecognizer) {
+        print(self.view.frame)
+        let translation = gesture.translation(in: self.view)
+        
+        self.view.frame.origin = translation
+        print(self.view.frame)
+        
+        if gesture.state == .ended {
+            let velocity = gesture.velocity(in: self.view)
+            
+            if velocity.y >= 1500 {
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                UIView.animate(withDuration: 0.4) {
+                    self.view.frame.origin = .zero
+                }
+            }
+        }
     }
     
 }

@@ -10,6 +10,7 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
+    var infoVC: InfoViewController?
     var model: Holiday? {
         didSet {
             guard let model = self.model else { return }
@@ -31,6 +32,13 @@ class DetailViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTouched))
         self.imageView.addGestureRecognizer(tapGesture)
         setupViews()
+        
+//        let infovc = InfoViewController()
+//        infovc.model = model
+//        self.addChild(infovc)
+//        self.view.addSubview(infovc.view)
+//        infovc.didMove(toParent: self)
+//        self.infoVC = infovc
     }
     
     func setupViews() {

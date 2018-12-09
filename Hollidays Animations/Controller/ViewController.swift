@@ -51,13 +51,13 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
 //        if true {
-            let infoViewController = InfoViewController()
-            infoViewController.model = array[indexPath.row]
-            infoViewController.transitioningDelegate = slideInTransitioningDelegate
-            infoViewController.modalPresentationStyle = .custom
-            self.present(infoViewController, animated: true) {
-                print("XPTO")
-            }
+//            let infoViewController = InfoViewController()
+//            infoViewController.model = array[indexPath.row]
+//            infoViewController.transitioningDelegate = slideInTransitioningDelegate
+//            infoViewController.modalPresentationStyle = .custom
+//            self.present(infoViewController, animated: true) {
+//                print("XPTO")
+//            }
 //        } else {
             let detailViewController = DetailViewController()
             detailViewController.model = array[indexPath.row]

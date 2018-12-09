@@ -43,14 +43,14 @@ class SpringyFlowLayout: UICollectionViewFlowLayout {
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         guard let scrollView = self.collectionView else { return false }
         let touchLocation = scrollView.panGestureRecognizer.location(in: scrollView)
-        let scrollDelta = newBounds.origin.y - scrollView.bounds.origin.y
+        let scrollDelta = newBounds.origin.y + scrollView.bounds.origin.y
     
         self.dynamicAnimator?.behaviors.forEach {
             guard let behavior = $0 as? UIAttachmentBehavior, let item = behavior.items.first else { return }
             
             let anchorPoint = behavior.anchorPoint
-            let distanceFromTouch = touchLocation.y - anchorPoint.y
-            let scrollResistance = distanceFromTouch / 150
+            let distanceFromTouch = touchLocation.y + anchorPoint.y
+            let scrollResistance = distanceFromTouch / 25
             
             var center = item.center
             center.y += min(scrollDelta, scrollResistance)
