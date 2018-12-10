@@ -25,7 +25,7 @@ class ZoomTransitioningDelegate: NSObject {
     
     var transitionDuration = 0.5
     var operation: UINavigationController.Operation = .none
-    private let zoomScale = CGFloat(15)
+    var isPresenting: Bool = false
     private let backgroundScale = CGFloat(0.7)
     
     typealias ZoomingViews = (otherView: UIView, imageView: UIView)
@@ -56,23 +56,14 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 
-        guard let fromViewController = transitionContext.viewController(forKey: .from),
-              let toViewController = transitionContext.viewController(forKey: .to) else {
-            return
-        }
+        guard let fromViewController = transitionContext.viewController(forKey: .from) else { return }
+        guard let toViewController = transitionContext.viewController(forKey: .to) else { return }
         
-        var backgroundViewController = fromViewController
-        var foregroundViewController = toViewController
+        let backgroundViewController = isPresenting ? fromViewController : toViewController
+        let foregroundViewController = isPresenting ? toViewController : fromViewController
         
-        if operation == .pop {
-            backgroundViewController = toViewController
-            foregroundViewController = fromViewController
-        }
-        
-        guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self),
-              let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else {
-            return
-        }
+        guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
+        guard let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.contentMode = .scaleAspectFill
@@ -81,22 +72,14 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         backgroundImageView.isHidden = true
         foregroundImageView.isHidden = true
-        let foregroundViewBackgroundColor = foregroundViewController.view.backgroundColor
-        foregroundViewController.view.backgroundColor = UIColor.clear
         
         let containerView = transitionContext.containerView
-        containerView.backgroundColor = UIColor.white
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
         containerView.addSubview(imageViewSnapshot)
         
-        var preTransitionState = TransitionState.initial
-        var postTransitionState = TransitionState.final
-        
-        if operation == .pop {
-            preTransitionState = .final
-            postTransitionState = .initial
-        }
+        let preTransitionState = isPresenting ? TransitionState.initial : TransitionState.final
+        let postTransitionState = isPresenting ? TransitionState.final : TransitionState.initial
         
         configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
         
@@ -113,7 +96,6 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             imageViewSnapshot.removeFromSuperview()
             backgroundImageView.isHidden = false
             foregroundImageView.isHidden = false
-            foregroundViewController.view.backgroundColor = foregroundViewBackgroundColor
             
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
@@ -125,7 +107,12 @@ extension ZoomTransitioningDelegate: UINavigationControllerDelegate {
     
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if fromVC is ZoomingViewController && toVC is ZoomingViewController {
-            self.operation = operation
+            if operation == .push {
+                self.isPresenting = true
+            } else {
+                self.isPresenting = false
+            }
+            
             return self
         } else {
             return nil

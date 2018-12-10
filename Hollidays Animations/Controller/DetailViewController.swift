@@ -28,7 +28,6 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .red
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTouched))
         self.imageView.addGestureRecognizer(tapGesture)
         setupViews()
