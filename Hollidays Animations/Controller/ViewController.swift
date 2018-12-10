@@ -27,6 +27,7 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         self.navigationController?.navigationBar.isHidden = true
         
+        self.navigationController?.delegate = self
         self.collectionView.backgroundColor = .white
         self.collectionView.register(CollectionCell.self)
     }
@@ -76,7 +77,6 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         self.selectedSong = array[indexPath.row]
         let theAttributes:UICollectionViewLayoutAttributes! = collectionView.layoutAttributesForItem(at: indexPath)
         self.selectedFrame = collectionView.convert(theAttributes.frame, to: collectionView.superview)
-        self.navigationController?.delegate = self
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }
     
@@ -93,7 +93,7 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
 
 extension ViewController: UINavigationControllerDelegate {
     
-    private func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
         guard let frame = self.selectedFrame else { return nil }
         guard let song = self.selectedSong else { return nil }
