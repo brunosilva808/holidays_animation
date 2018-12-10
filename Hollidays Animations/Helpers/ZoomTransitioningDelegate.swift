@@ -25,7 +25,6 @@ class ZoomTransitioningDelegate: NSObject {
     
     var transitionDuration = 0.5
     var operation: UINavigationController.Operation = .none
-    private let zoomScale = CGFloat(15)
     private let backgroundScale = CGFloat(0.7)
     
     typealias ZoomingViews = (otherView: UIView, imageView: UIView)
@@ -55,10 +54,10 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-
+        
         guard let fromViewController = transitionContext.viewController(forKey: .from),
-              let toViewController = transitionContext.viewController(forKey: .to) else {
-            return
+            let toViewController = transitionContext.viewController(forKey: .to) else {
+                return
         }
         
         var backgroundViewController = fromViewController
@@ -70,18 +69,17 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         }
         
         guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self),
-              let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else {
-            return
+            let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else {
+                return
         }
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.contentMode = .scaleAspectFill
         imageViewSnapshot.layer.masksToBounds = true
+        imageViewSnapshot.setRoundedCorners(toRadius: 15)
         
         backgroundImageView.isHidden = true
         foregroundImageView.isHidden = true
-        let foregroundViewBackgroundColor = foregroundViewController.view.backgroundColor
-        foregroundViewController.view.backgroundColor = UIColor.clear
         
         let containerView = transitionContext.containerView
         containerView.backgroundColor = UIColor.white
@@ -112,7 +110,6 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             imageViewSnapshot.removeFromSuperview()
             backgroundImageView.isHidden = false
             foregroundImageView.isHidden = false
-            foregroundViewController.view.backgroundColor = foregroundViewBackgroundColor
             
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
