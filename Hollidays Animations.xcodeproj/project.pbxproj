@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		3C07DCE821BD35DB00EB47F6 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07DCE721BD35DB00EB47F6 /* InfoViewController.swift */; };
 		3C07DCEA21BD432900EB47F6 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07DCE921BD432900EB47F6 /* PresentationAnimator.swift */; };
+		3C07DCEC21BD763500EB47F6 /* SlideInPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07DCEB21BD763500EB47F6 /* SlideInPresentationManager.swift */; };
+		3C07DCEF21BD79B800EB47F6 /* SlideInPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07DCEE21BD79B800EB47F6 /* SlideInPresentationController.swift */; };
+		3C07DCF321BE945D00EB47F6 /* ZoomTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07DCF221BE945D00EB47F6 /* ZoomTransitioningDelegate.swift */; };
+		3C07DCF721BE99C200EB47F6 /* CustomAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C07DCF621BE99C200EB47F6 /* CustomAnimator.swift */; };
 		3CC6E49921BBF8FC00E62E97 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6E49821BBF8FC00E62E97 /* DetailViewController.swift */; };
 		3CC6E49D21BC3B6800E62E97 /* ZoomTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6E49C21BC3B6800E62E97 /* ZoomTransitioningDelegate.swift */; };
 		7E8974A021B7F0940041AD31 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E89749F21B7F0940041AD31 /* AppDelegate.swift */; };
@@ -36,6 +40,10 @@
 /* Begin PBXFileReference section */
 		3C07DCE721BD35DB00EB47F6 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		3C07DCE921BD432900EB47F6 /* PresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
+		3C07DCEB21BD763500EB47F6 /* SlideInPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideInPresentationManager.swift; sourceTree = "<group>"; };
+		3C07DCEE21BD79B800EB47F6 /* SlideInPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideInPresentationController.swift; sourceTree = "<group>"; };
+		3C07DCF221BE945D00EB47F6 /* ZoomTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitioningDelegate.swift; sourceTree = "<group>"; };
+		3C07DCF621BE99C200EB47F6 /* CustomAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAnimator.swift; sourceTree = "<group>"; };
 		3CC6E49821BBF8FC00E62E97 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		3CC6E49C21BC3B6800E62E97 /* ZoomTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZoomTransitioningDelegate.swift; path = "../../../holidays_animation copy/Hollidays Animations/Helpers/ZoomTransitioningDelegate.swift"; sourceTree = "<group>"; };
 		7E89749C21B7F0940041AD31 /* Hollidays Animations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hollidays Animations.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +80,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C07DCED21BD764000EB47F6 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				3C07DCEB21BD763500EB47F6 /* SlideInPresentationManager.swift */,
+				3C07DCEE21BD79B800EB47F6 /* SlideInPresentationController.swift */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		3C07DCF821BE99CB00EB47F6 /* Animator */ = {
+			isa = PBXGroup;
+			children = (
+				3C07DCF621BE99C200EB47F6 /* CustomAnimator.swift */,
+			);
+			path = Animator;
+			sourceTree = "<group>";
+		};
 		7E89749321B7F0930041AD31 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +142,8 @@
 			isa = PBXGroup;
 			children = (
 				3CC6E49C21BC3B6800E62E97 /* ZoomTransitioningDelegate.swift */,
+				3C07DCF821BE99CB00EB47F6 /* Animator */,
+				3C07DCED21BD764000EB47F6 /* Presentation */,
 				7E8974CE21B96E040041AD31 /* CollectionFlowLayout.swift */,
 				7E8974C821B7F5510041AD31 /* Extensions */,
 				3C07DCE921BD432900EB47F6 /* PresentationAnimator.swift */,
@@ -267,6 +294,7 @@
 				7E8974CA21B7F5D00041AD31 /* Holiday.swift in Sources */,
 				7E8974C421B7F5130041AD31 /* UICollectionView+Extensions.swift in Sources */,
 				7E8974C621B7F5410041AD31 /* UITableView+Extensions.swift in Sources */,
+				3C07DCF721BE99C200EB47F6 /* CustomAnimator.swift in Sources */,
 				3C07DCEA21BD432900EB47F6 /* PresentationAnimator.swift in Sources */,
 				7E8974C221B7F2560041AD31 /* UIView+Extension.swift in Sources */,
 				7E8974A021B7F0940041AD31 /* AppDelegate.swift in Sources */,

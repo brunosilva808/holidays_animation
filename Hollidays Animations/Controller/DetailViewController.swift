@@ -21,6 +21,7 @@ class DetailViewController: UIViewController {
         let imageView = UIImageView()
         imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleToFill
+        imageView.tag = 99
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

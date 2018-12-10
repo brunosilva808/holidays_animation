@@ -47,13 +47,37 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         return self.array.count
     }
     
+//    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//
+////        if true {
+////            let infoViewController = InfoViewController()
+////            infoViewController.model = array[indexPath.row]
+////            infoViewController.transitioningDelegate = slideInTransitioningDelegate
+////            infoViewController.modalPresentationStyle = .custom
+////            self.present(infoViewController, animated: true) {
+////                print("XPTO")
+////            }
+////        } else {
+////            let detailViewController = DetailViewController()
+////            detailViewController.model = array[indexPath.row]
+////            self.navigationController?.delegate = zoomDelegate
+////            self.navigationController?.pushViewController(detailViewController, animated: true)
+////
+////            self.selectedIndexPath = indexPath
+////        }
+//    }
+    
+    var selectedSong: Holiday?
+    var selectedFrame: CGRect?
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
         detailViewController.model = array[indexPath.row]
-        self.navigationController?.delegate = zoomDelegate
+        self.selectedSong = array[indexPath.row]
+        let theAttributes:UICollectionViewLayoutAttributes! = collectionView.layoutAttributesForItem(at: indexPath)
+        self.selectedFrame = collectionView.convert(theAttributes.frame, to: collectionView.superview)
+        self.navigationController?.delegate = self
         self.navigationController?.pushViewController(detailViewController, animated: true)
-        
-        self.selectedIndexPath = indexPath
     }
     
 //    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -65,6 +89,22 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
 //        }, completion: nil)
 //    }
     
+}
+
+extension ViewController: UINavigationControllerDelegate {
+    
+    private func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        guard let frame = self.selectedFrame else { return nil }
+        guard let song = self.selectedSong else { return nil }
+        
+        switch operation {
+        case .push:
+            return CustomAnimator(duration: TimeInterval(UINavigationController.hideShowBarDuration), isPresenting: true, originFrame: frame, image: UIImage(named: song.imageName)!)
+        default:
+            return CustomAnimator(duration: TimeInterval(UINavigationController.hideShowBarDuration), isPresenting: false, originFrame: frame, image: UIImage(named: song.imageName)!)
+        }
+    }
 }
 
 extension ViewController: ZoomingViewController {

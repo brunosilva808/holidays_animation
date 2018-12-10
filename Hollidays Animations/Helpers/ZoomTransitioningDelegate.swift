@@ -55,11 +55,9 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-
-        guard let fromViewController = transitionContext.viewController(forKey: .from),
-              let toViewController = transitionContext.viewController(forKey: .to) else {
-            return
-        }
+        
+        guard let fromViewController = transitionContext.viewController(forKey: .from) else { return }
+        guard let toViewController = transitionContext.viewController(forKey: .to) else { return }
         
         var backgroundViewController = fromViewController
         var foregroundViewController = toViewController
