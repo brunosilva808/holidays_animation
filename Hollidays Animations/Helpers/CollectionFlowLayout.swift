@@ -26,6 +26,7 @@ class SpringyFlowLayout: UICollectionViewFlowLayout {
                     spring.damping = 0.5
                     spring.frequency = 0.8
                     
+                    self.dynamicAnimator?.removeBehavior(spring)
                     self.dynamicAnimator?.addBehavior(spring)
                 }
             }
@@ -49,11 +50,11 @@ class SpringyFlowLayout: UICollectionViewFlowLayout {
             guard let behavior = $0 as? UIAttachmentBehavior, let item = behavior.items.first else { return }
             
             let anchorPoint = behavior.anchorPoint
-            let distanceFromTouch = touchLocation.y + anchorPoint.y
+            let distanceFromTouch = fabsf(Float(touchLocation.y - anchorPoint.y))
             let scrollResistance = distanceFromTouch / 150
             
             var center = item.center
-            center.y += min(scrollDelta, scrollResistance)
+            center.y += min(scrollDelta, CGFloat(scrollResistance))
             item.center = center
             
             self.dynamicAnimator?.updateItem(usingCurrentState: item)
