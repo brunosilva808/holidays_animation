@@ -26,6 +26,12 @@ class DetailViewController: UIViewController {
         return imageView
     }()
     
+    let bottomView: UIView = {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = .blue
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -37,9 +43,13 @@ class DetailViewController: UIViewController {
     
     func setupViews() {
         self.view.addSubview(self.imageView)
+        self.view.addSubview(self.bottomView)
         
-        self.view.addConstraintsWithFormat("H:|[v0]|", views: imageView)
-        self.view.addConstraintsWithFormat("V:|[v0]|", views: imageView)
+        self.view.addConstraintsWithFormat("H:|[v0]|", views: self.imageView)
+        self.view.addConstraintsWithFormat("V:|[v0]|", views: self.imageView)
+        
+        self.view.addConstraintsWithFormat("H:|[v0]|", views: self.bottomView)
+        self.view.addConstraintsWithFormat("V:[v0(244)]|", views: self.bottomView)
     }
 
     @objc func imageTouched() {

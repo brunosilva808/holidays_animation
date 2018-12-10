@@ -44,7 +44,7 @@ class CustomAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         transitionImageView.image = image
         containerView.addSubview(transitionImageView)
         
-        toView.frame = isPresenting ?  CGRect(x: fromView.frame.width, y: 0, width: toView.frame.width, height: toView.frame.height) : toView.frame
+        toView.frame = isPresenting ?  CGRect(x: 0, y: toView.frame.height, width: toView.frame.width, height: toView.frame.height) : toView.frame
         toView.alpha = isPresenting ? 0 : 1
         toView.layoutIfNeeded()
         
