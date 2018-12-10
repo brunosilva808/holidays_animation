@@ -70,6 +70,7 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     var selectedSong: Holiday?
     var selectedFrame: CGRect?
+    var detailFrame: CGRect?
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController()
@@ -77,6 +78,7 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         self.selectedSong = array[indexPath.row]
         let theAttributes:UICollectionViewLayoutAttributes! = collectionView.layoutAttributesForItem(at: indexPath)
         self.selectedFrame = collectionView.convert(theAttributes.frame, to: collectionView.superview)
+        self.detailFrame = detailViewController.imageView2.frame
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }
     
@@ -97,12 +99,13 @@ extension ViewController: UINavigationControllerDelegate {
         
         guard let frame = self.selectedFrame else { return nil }
         guard let song = self.selectedSong else { return nil }
+        guard let detailFrame = self.detailFrame else { return nil }
         
         switch operation {
         case .push:
-            return CustomAnimator(duration: TimeInterval(UINavigationController.hideShowBarDuration), isPresenting: true, originFrame: frame, image: UIImage(named: song.imageName)!)
+            return CustomAnimator(duration: TimeInterval(UINavigationController.hideShowBarDuration), isPresenting: true, originFrame: frame, image: UIImage(named: song.imageName)!, detailFrame: detailFrame, detailView: UIView(frame: detailFrame))
         default:
-            return CustomAnimator(duration: TimeInterval(UINavigationController.hideShowBarDuration), isPresenting: false, originFrame: frame, image: UIImage(named: song.imageName)!)
+            return CustomAnimator(duration: TimeInterval(UINavigationController.hideShowBarDuration), isPresenting: false, originFrame: frame, image: UIImage(named: song.imageName)!, detailFrame: detailFrame, detailView: UIView(frame: detailFrame))
         }
     }
 }

@@ -14,6 +14,7 @@ class DetailViewController: UIViewController {
         didSet {
             guard let model = self.model else { return }
             imageView.image = UIImage(named: model.imageName)
+            imageView2.image = UIImage(named: model.imageName)
         }
     }
     
@@ -28,8 +29,18 @@ class DetailViewController: UIViewController {
     
     let bottomView: UIView = {
         let view = UIView(frame: .zero)
+//        view.tag = 98
         view.backgroundColor = .blue
         return view
+    }()
+    
+    let imageView2: UIImageView = {
+        let imageView = UIImageView()
+        imageView.isUserInteractionEnabled = true
+        imageView.contentMode = .scaleToFill
+        imageView.tag = 98
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     override func viewDidLoad() {
@@ -43,13 +54,13 @@ class DetailViewController: UIViewController {
     
     func setupViews() {
         self.view.addSubview(self.imageView)
-        self.view.addSubview(self.bottomView)
+        self.view.addSubview(self.imageView2)
         
         self.view.addConstraintsWithFormat("H:|[v0]|", views: self.imageView)
         self.view.addConstraintsWithFormat("V:|[v0]|", views: self.imageView)
         
-        self.view.addConstraintsWithFormat("H:|[v0]|", views: self.bottomView)
-        self.view.addConstraintsWithFormat("V:[v0(244)]|", views: self.bottomView)
+        self.view.addConstraintsWithFormat("H:|[v0]|", views: self.imageView2)
+        self.view.addConstraintsWithFormat("V:[v0(244)]|", views: self.imageView2)
     }
 
     @objc func imageTouched() {
