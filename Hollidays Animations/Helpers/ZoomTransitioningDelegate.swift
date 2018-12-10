@@ -23,9 +23,11 @@ enum TransitionState {
 
 class ZoomTransitioningDelegate: NSObject {
     
+    var initialDetailFrame = CGRect(x: 0, y: UIScreen().bounds.height, width: UIScreen().bounds.width, height: 244)
+    var finalDetailFrame = CGRect(x: 0, y: UIScreen().bounds.height - 244, width: UIScreen().bounds.width, height: 244)
     var transitionDuration = 0.5
     var operation: UINavigationController.Operation = .none
-    private let zoomScale = CGFloat(15)
+    var image: UIImage?
     private let backgroundScale = CGFloat(0.7)
     
     typealias ZoomingViews = (otherView: UIView, imageView: UIView)
@@ -56,10 +58,8 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 
-        guard let fromViewController = transitionContext.viewController(forKey: .from),
-              let toViewController = transitionContext.viewController(forKey: .to) else {
-            return
-        }
+        guard let fromViewController = transitionContext.viewController(forKey: .from) else { return }
+        guard let toViewController = transitionContext.viewController(forKey: .to) else { return }
         
         var backgroundViewController = fromViewController
         var foregroundViewController = toViewController
@@ -69,10 +69,22 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             foregroundViewController = fromViewController
         }
         
-        guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self),
-              let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else {
-            return
-        }
+        guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
+        guard let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
+        
+        // **************
+        
+//        guard let artwork = toViewController.view.viewWithTag(99) as? UIImageView else { return }
+//        artwork.image = image
+//        artwork.frame = self.initialDetailFrame
+//        artwork.contentMode = .scaleAspectFill
+//        artwork.layer.masksToBounds = true
+//        artwork.alpha = 0.0
+//
+//        let transitionImageView = UIImageView(frame: self.initialDetailFrame)
+//        transitionImageView.image = artwork.image
+        
+        // **************
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.contentMode = .scaleAspectFill
@@ -86,9 +98,11 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         let containerView = transitionContext.containerView
         containerView.backgroundColor = UIColor.white
+        
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
         containerView.addSubview(imageViewSnapshot)
+//        containerView.addSubview(transitionImageView)
         
         var preTransitionState = TransitionState.initial
         var postTransitionState = TransitionState.final
@@ -107,7 +121,12 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             
             self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
             
+//            transitionImageView.frame = self.finalDetailFrame
+//            artwork.alpha = 1.0
+            
         }) { (finished) in
+            
+//            transitionImageView.removeFromSuperview()
             
             backgroundViewController.view.transform = CGAffineTransform.identity
             imageViewSnapshot.removeFromSuperview()

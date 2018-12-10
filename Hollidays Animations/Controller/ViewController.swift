@@ -51,6 +51,7 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let detailViewController = DetailViewController()
         detailViewController.model = array[indexPath.row]
         self.navigationController?.delegate = zoomDelegate
+        zoomDelegate.image = UIImage(named: array[indexPath.row].imageName)
         self.navigationController?.pushViewController(detailViewController, animated: true)
         
         self.selectedIndexPath = indexPath
