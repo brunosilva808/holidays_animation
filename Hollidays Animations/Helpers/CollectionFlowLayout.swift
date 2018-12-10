@@ -49,7 +49,7 @@ class SpringyFlowLayout: UICollectionViewFlowLayout {
             guard let behavior = $0 as? UIAttachmentBehavior, let item = behavior.items.first else { return }
             
             let anchorPoint = behavior.anchorPoint
-            let distanceFromTouch = touchLocation.y - anchorPoint.y
+            let distanceFromTouch = touchLocation.y + anchorPoint.y
             let scrollResistance = distanceFromTouch / 150
             
             var center = item.center
