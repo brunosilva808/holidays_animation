@@ -74,15 +74,12 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         // **************
         
-//        guard let artwork = toViewController.view.viewWithTag(99) as? UIImageView else { return }
-//        artwork.image = image
-//        artwork.frame = self.initialDetailFrame
-//        artwork.contentMode = .scaleAspectFill
-//        artwork.layer.masksToBounds = true
-//        artwork.alpha = 0.0
-//
-//        let transitionImageView = UIImageView(frame: self.initialDetailFrame)
-//        transitionImageView.image = artwork.image
+        guard let artwork = toViewController.view.viewWithTag(99) as? UIImageView else { return }
+        artwork.image = image
+        artwork.alpha = 0.0
+        
+        let transitionImageView = UIImageView(frame: self.initialDetailFrame)
+        transitionImageView.image = artwork.image
         
         // **************
         
@@ -102,7 +99,7 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
         containerView.addSubview(imageViewSnapshot)
-//        containerView.addSubview(transitionImageView)
+        containerView.addSubview(transitionImageView)
         
         var preTransitionState = TransitionState.initial
         var postTransitionState = TransitionState.final
@@ -121,12 +118,12 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             
             self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
             
-//            transitionImageView.frame = self.finalDetailFrame
-//            artwork.alpha = 1.0
+            transitionImageView.frame = self.finalDetailFrame
+            artwork.alpha = 1.0
             
         }) { (finished) in
             
-//            transitionImageView.removeFromSuperview()
+            transitionImageView.removeFromSuperview()
             
             backgroundViewController.view.transform = CGAffineTransform.identity
             imageViewSnapshot.removeFromSuperview()
