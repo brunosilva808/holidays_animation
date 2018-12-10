@@ -24,7 +24,7 @@ class SpringyFlowLayout: UICollectionViewFlowLayout {
                     let spring = UIAttachmentBehavior.init(item: $0, attachedToAnchor: $0.center)
                     spring.length = 0
                     spring.damping = 0.5
-                    spring.frequency = 0.8
+                    spring.frequency = 0.9
                     
                     self.dynamicAnimator?.addBehavior(spring)
                 }
