@@ -64,6 +64,7 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
         guard let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
+        guard let foregroundDetailView = (foregroundViewController as? ZoomingViewController)?.zoomingBackgroundImageView(for: self) else { return }
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.contentMode = .scaleAspectFill
@@ -72,11 +73,19 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         backgroundImageView.isHidden = true
         foregroundImageView.isHidden = true
+        foregroundDetailView.isHidden = true
         
         let containerView = transitionContext.containerView
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
         containerView.addSubview(imageViewSnapshot)
+        
+        let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
+        detailViewSnapshot.backgroundColor = .red
+        detailViewSnapshot.setRoundedCorners(toRadius: 15)
+        detailViewSnapshot.frame = isPresenting ? CGRect(x: 0, y: UIScreen.main.bounds.height, width: UIScreen.main.bounds.width, height: 0) : CGRect(x: 0, y: UIScreen.main.bounds.height - 244, width: UIScreen.main.bounds.width, height: 244)
+        detailViewSnapshot.layer.masksToBounds = true
+        containerView.addSubview(detailViewSnapshot)
         
         let preTransitionState = isPresenting ? TransitionState.initial : TransitionState.final
         let postTransitionState = isPresenting ? TransitionState.final : TransitionState.initial
@@ -90,12 +99,16 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             
             self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
             
+            detailViewSnapshot.frame = self.isPresenting ? CGRect(x: 0, y: UIScreen.main.bounds.height - 244, width: UIScreen.main.bounds.width, height: 244) : CGRect(x: 0, y: UIScreen.main.bounds.height, width: UIScreen.main.bounds.width, height: 244)
+            
         }) { (finished) in
             
             backgroundViewController.view.transform = CGAffineTransform.identity
             imageViewSnapshot.removeFromSuperview()
+            detailViewSnapshot.removeFromSuperview()
             backgroundImageView.isHidden = false
             foregroundImageView.isHidden = false
+            foregroundDetailView.isHidden = false
             
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
