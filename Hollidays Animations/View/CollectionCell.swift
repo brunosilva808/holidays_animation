@@ -14,16 +14,30 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
         didSet {
             guard let model = self.model else { return }
             imageView.image = UIImage(named: model.imageName)
+            titleLabel.text = model.title
         }
     }
     
+    let shadowView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        view.setRoundedCorners(toRadius: 15)
+        view.setShadow(color: .black, radius: 5)
+        return view
+    }()
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .blue
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.setRoundedCorners(toRadius: 15)
         imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
+    }()
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 21)
+        return label
     }()
     
     override init(frame: CGRect) {
@@ -37,10 +51,21 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
     }
     
     func setupViews() {
+        self.addSubview(self.shadowView)
         self.addSubview(self.imageView)
+        self.addSubview(self.titleLabel)
+        
+        self.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: shadowView)
+        self.addConstraintsWithFormat("V:|-8-[v0]-16-|", views: shadowView)
         
         self.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: imageView)
-        self.addConstraintsWithFormat("V:|-8-[v0]-8-|", views: imageView)
+        self.addConstraintsWithFormat("V:|-8-[v0]-16-|", views: imageView)
+        
+        self.addConstraintsWithFormat("H:|-32-[v0]-32-|", views: titleLabel)
+        self.addConstraintsWithFormat("V:[v0]-32-|", views: titleLabel)
+        
+//        self.addConstraintsWithFormat("V:|-8-[v0][v1][v0]-16-|", views: imageView, shadowView)
+//        self.addConstraintsWithFormat("H:|-16-[v0][v1][v0]-16-|", views: imageView, shadowView)
     }
     
 }
