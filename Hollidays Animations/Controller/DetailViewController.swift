@@ -88,7 +88,7 @@ extension DetailViewController: ZoomingViewController {
         return self.imageView
     }
     
-    func zoomingBackgroundImageView(for transition: ZoomTransitioningDelegate) -> UIView? {
+    func zoomingDetailView(for transition: ZoomTransitioningDelegate) -> UIView? {
         return self.detailView
     }
 }

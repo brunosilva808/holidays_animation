@@ -62,15 +62,6 @@ class ViewController: UICollectionViewController, UICollectionViewDelegateFlowLa
         self.selectedIndexPath = indexPath
     }
     
-//    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//
-//        cell.transform = CGAffineTransform(translationX: 0, y: cell.frame.height/2)
-//
-//        UIView.animate(withDuration: 0.5, delay: 0.01 * Double(indexPath.row), options: [.curveEaseInOut], animations: {
-//            cell.transform = CGAffineTransform(translationX: 0, y: 0)
-//        }, completion: nil)
-//    }
-    
 }
 
 extension ViewController: ZoomingViewController {
@@ -92,7 +83,7 @@ extension ViewController: ZoomingViewController {
         return nil
     }
     
-    func zoomingBackgroundImageView(for transition: ZoomTransitioningDelegate) -> UIView? {
+    func zoomingDetailView(for transition: ZoomTransitioningDelegate) -> UIView? {
         return nil
     }
     

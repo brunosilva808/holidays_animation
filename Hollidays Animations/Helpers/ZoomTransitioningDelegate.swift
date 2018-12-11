@@ -12,7 +12,7 @@ protocol ZoomingViewController {
     
     func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView?
     func zoomingTitleLabel(for transition: ZoomTransitioningDelegate) -> UILabel?
-    func zoomingBackgroundImageView(for transition: ZoomTransitioningDelegate) -> UIView?
+    func zoomingDetailView(for transition: ZoomTransitioningDelegate) -> UIView?
 }
 
 enum TransitionState {
@@ -66,7 +66,7 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
         guard let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
-        guard let foregroundDetailView = (foregroundViewController as? ZoomingViewController)?.zoomingBackgroundImageView(for: self) else { return }
+        guard let foregroundDetailView = (foregroundViewController as? ZoomingViewController)?.zoomingDetailView(for: self) else { return }
         guard let labelTitleForeground = (backgroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
         guard let labelTitleBackground = (foregroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
         
@@ -82,15 +82,11 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         imageViewSnapshot.setRoundedCorners(toRadius: 15)
 
         let labelSnapshot = UILabel(frame: labelTitleBackground.frame)
-        labelSnapshot.text = "12434"
-        
-        let containerView = transitionContext.containerView
-        containerView.addSubview(backgroundViewController.view)
-        containerView.addSubview(foregroundViewController.view)
-        containerView.addSubview(imageViewSnapshot)
+        labelSnapshot.text = "Title 1"
         
         let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
         detailViewSnapshot.backgroundColor = .white
+        detailViewSnapshot.layer.masksToBounds = true
         detailViewSnapshot.setRoundedCorners(toRadius: 15)
         detailViewSnapshot.frame = isPresenting ?
             CGRect(x: 0,
@@ -101,7 +97,12 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
                    y: UIScreen.main.bounds.height - foregroundDetailView.frame.height,
                    width: UIScreen.main.bounds.width,
                    height: DetailViewController.detailViewHeight)
-        detailViewSnapshot.layer.masksToBounds = true
+        
+        let containerView = transitionContext.containerView
+        containerView.addSubview(backgroundViewController.view)
+        containerView.addSubview(foregroundViewController.view)
+        containerView.addSubview(labelSnapshot)
+        containerView.addSubview(imageViewSnapshot)
         containerView.addSubview(detailViewSnapshot)
         
         let preTransitionState = isPresenting ? TransitionState.initial : TransitionState.final
