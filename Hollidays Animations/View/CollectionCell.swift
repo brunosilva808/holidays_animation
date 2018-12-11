@@ -17,6 +17,14 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
         }
     }
     
+    let shadowView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.setRoundedCorners(toRadius: 15)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setShadow(color: .gray, radius: 5)
+        return view
+    }()
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .blue
@@ -37,10 +45,17 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
     }
     
     func setupViews() {
+        self.addSubview(self.shadowView)
         self.addSubview(self.imageView)
+        
+        self.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: shadowView)
+        self.addConstraintsWithFormat("V:|-8-[v0]-16-|", views: shadowView)
         
         self.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: imageView)
         self.addConstraintsWithFormat("V:|-8-[v0]-8-|", views: imageView)
+        
+//        self.addConstraintsWithFormat("V:|-8-[v0][v1][v0]-16-|", views: imageView, shadowView)
+//        self.addConstraintsWithFormat("H:|-16-[v0][v1][v0]-16-|", views: imageView, shadowView)
     }
     
 }

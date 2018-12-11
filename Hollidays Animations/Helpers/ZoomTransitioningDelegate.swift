@@ -83,7 +83,15 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
         detailViewSnapshot.backgroundColor = .red
         detailViewSnapshot.setRoundedCorners(toRadius: 15)
-        detailViewSnapshot.frame = isPresenting ? CGRect(x: 0, y: UIScreen.main.bounds.height, width: UIScreen.main.bounds.width, height: 0) : CGRect(x: 0, y: UIScreen.main.bounds.height - 244, width: UIScreen.main.bounds.width, height: 244)
+        detailViewSnapshot.frame = isPresenting ?
+            CGRect(x: 0,
+                   y: UIScreen.main.bounds.height,
+                   width: UIScreen.main.bounds.width,
+                   height: 0) :
+            CGRect(x: 0,
+                   y: UIScreen.main.bounds.height - foregroundDetailView.frame.height,
+                   width: UIScreen.main.bounds.width,
+                   height: 0)
         detailViewSnapshot.layer.masksToBounds = true
         containerView.addSubview(detailViewSnapshot)
         
@@ -99,7 +107,15 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             
             self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView), viewsInForeground: (foregroundImageView, foregroundImageView), snapshotViews: (imageViewSnapshot, imageViewSnapshot))
             
-            detailViewSnapshot.frame = self.isPresenting ? CGRect(x: 0, y: UIScreen.main.bounds.height - 244, width: UIScreen.main.bounds.width, height: 244) : CGRect(x: 0, y: UIScreen.main.bounds.height, width: UIScreen.main.bounds.width, height: 244)
+            detailViewSnapshot.frame = self.isPresenting ?
+                CGRect(x: 0,
+                       y: UIScreen.main.bounds.height - foregroundDetailView.frame.height + DetailViewController.detailViewMargin,
+                       width: UIScreen.main.bounds.width,
+                       height: foregroundDetailView.frame.height + DetailViewController.detailViewMargin) :
+                CGRect(x: 0,
+                       y: UIScreen.main.bounds.height,
+                       width: UIScreen.main.bounds.width,
+                       height: foregroundDetailView.frame.height)
             
         }) { (finished) in
             

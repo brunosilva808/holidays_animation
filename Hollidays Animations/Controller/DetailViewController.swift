@@ -25,8 +25,10 @@ class DetailViewController: UIViewController {
         return imageView
     }()
     
+    static let detailViewHeight: CGFloat = 344.0
+    static let detailViewMargin: CGFloat = 100.0
     let detailView: UIView = {
-        let view = UIView()
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: detailViewHeight))
         view.isUserInteractionEnabled = true
         view.setRoundedCorners(toRadius: 15)
         view.backgroundColor = .white
@@ -35,7 +37,7 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTouched))
         self.imageView.addGestureRecognizer(tapGesture)
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(viewTouched))
@@ -50,8 +52,10 @@ class DetailViewController: UIViewController {
         self.view.addConstraintsWithFormat("H:|[v0]|", views: imageView)
         self.view.addConstraintsWithFormat("V:|[v0]|", views: imageView)
         
+//        let margin: CGFloat = 100.0
+        let metrics = ["height": DetailViewController.detailViewHeight]
         self.view.addConstraintsWithFormat("H:|[v0]|", views: detailView)
-        self.view.addConstraintsWithFormat("V:[v0(344)]-(-100)-|", views: detailView)
+        self.view.addConstraintsWithFormat("V:[v0(height)]-(-100)-|", views: detailView, metrics: metrics)
     }
 
     @objc func imageTouched() {
