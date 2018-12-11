@@ -89,4 +89,14 @@ extension ViewController: ZoomingViewController {
     func zoomingBackgroundImageView(for transition: ZoomTransitioningDelegate) -> UIView? {
         return nil
     }
+    
+    func zoomingShadowView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        if let indexPath = self.selectedIndexPath {
+            let cell = collectionView.cellForItem(at: indexPath) as! CollectionCell
+            return cell.shadowView
+        }
+        
+        return nil
+    }
+
 }

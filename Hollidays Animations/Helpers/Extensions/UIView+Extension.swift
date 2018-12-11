@@ -33,4 +33,8 @@ extension UIView {
         self.layer.shadowOpacity = 1.0
     }
     
+    func copyView<T: UIView>() -> T {
+        return NSKeyedUnarchiver.unarchiveObject(with: NSKeyedArchiver.archivedData(withRootObject: self)) as! T
+    }
+    
 }
