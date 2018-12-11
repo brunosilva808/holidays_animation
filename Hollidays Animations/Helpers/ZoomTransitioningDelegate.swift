@@ -95,17 +95,17 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         containerView.addSubview(imageViewSnapshot)
         
         let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
-        detailViewSnapshot.backgroundColor = .red
+        detailViewSnapshot.backgroundColor = .white
         detailViewSnapshot.setRoundedCorners(toRadius: 15)
         detailViewSnapshot.frame = isPresenting ?
             CGRect(x: 0,
                    y: UIScreen.main.bounds.height,
                    width: UIScreen.main.bounds.width,
-                   height: 0) :
+                   height: DetailViewController.detailViewHeight) :
             CGRect(x: 0,
                    y: UIScreen.main.bounds.height - foregroundDetailView.frame.height,
                    width: UIScreen.main.bounds.width,
-                   height: 0)
+                   height: DetailViewController.detailViewHeight)
         detailViewSnapshot.layer.masksToBounds = true
         containerView.addSubview(detailViewSnapshot)
         
