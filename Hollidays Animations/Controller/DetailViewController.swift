@@ -78,6 +78,10 @@ class DetailViewController: UIViewController {
 }
 
 extension DetailViewController: ZoomingViewController {
+    func zoomingShadowView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
+    
     func zoomingTitleLabel(for transition: ZoomTransitioningDelegate) -> UILabel? {
         return self.titleLabel
     }

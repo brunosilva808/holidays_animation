@@ -13,6 +13,7 @@ protocol ZoomingViewController {
     func zoomingImageView(for transition: ZoomTransitioningDelegate) -> UIImageView?
     func zoomingTitleLabel(for transition: ZoomTransitioningDelegate) -> UILabel?
     func zoomingDetailView(for transition: ZoomTransitioningDelegate) -> UIView?
+    func zoomingShadowView(for transition: ZoomTransitioningDelegate) -> UIView?
 }
 
 enum TransitionState {
@@ -29,7 +30,7 @@ class ZoomTransitioningDelegate: NSObject {
     private let backgroundScale = CGFloat(0.7)
     var model: Holiday?
     
-    typealias ZoomingViews = (otherView: UIView, imageView: UIView, label: UILabel)
+    typealias ZoomingViews = (otherView: UIView, imageView: UIView, label: UILabel, shadowView: UIView)
     
     init(holiday: Holiday) {
         super.init()
@@ -45,13 +46,15 @@ class ZoomTransitioningDelegate: NSObject {
             backgroundViewController.view.alpha = 1
             
             snapshotViews.imageView.frame = containerView.convert(viewsInBackground.imageView.frame, from: viewsInBackground.imageView.superview)
-            snapshotViews.label.frame = containerView.convert(viewsInForeground.label.frame, from: viewsInForeground.label.superview)
+            snapshotViews.label.frame = containerView.convert(viewsInBackground.label.frame, from: viewsInBackground.label.superview)
+            snapshotViews.shadowView.frame = containerView.convert(viewsInBackground.shadowView.frame, from: viewsInBackground.shadowView.superview)
         case .final:
             backgroundViewController.view.transform = CGAffineTransform(scaleX: backgroundScale, y: backgroundScale)
             backgroundViewController.view.alpha = 0
             
             snapshotViews.imageView.frame = containerView.convert(viewsInForeground.imageView.frame, from: viewsInForeground.imageView.superview)
-            snapshotViews.label.frame = containerView.convert(viewsInBackground.label.frame, from: viewsInBackground.label.superview)
+            snapshotViews.label.frame = containerView.convert(viewsInForeground.label.frame, from: viewsInForeground.label.superview)
+            snapshotViews.shadowView.frame = containerView.convert(viewsInForeground.shadowView.frame, from: viewsInForeground.shadowView.superview)
         }
     }
 }
@@ -75,16 +78,18 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         guard let backgroundLabelTitle = (backgroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
         guard let foregroundLabelTitle = (foregroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
         guard let foregroundDetailView = (foregroundViewController as? ZoomingViewController)?.zoomingDetailView(for: self) else { return }
+        guard let backgroundShadowView = (backgroundViewController as? ZoomingViewController)?.zoomingShadowView(for: self) else { return }
         
         backgroundImageView.isHidden = true
         foregroundImageView.isHidden = true
         backgroundLabelTitle.isHidden = true
         foregroundLabelTitle.isHidden = true
         foregroundDetailView.isHidden = true
+        backgroundShadowView.isHidden = true
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.set(style: .cell)
-        
+
         let labelSnapshot = UILabel(frame: backgroundLabelTitle.frame)
         labelSnapshot.set(style: .title)
         labelSnapshot.text = self.model?.title
@@ -101,9 +106,13 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
                    width: UIScreen.main.bounds.width,
                    height: DetailViewController.detailViewHeight)
         
+        let shadowViewSnapshot = UIView(frame: backgroundShadowView.frame)
+        shadowViewSnapshot.set(style: .shadow)
+        
         let containerView = transitionContext.containerView
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
+        containerView.addSubview(shadowViewSnapshot)
         containerView.addSubview(imageViewSnapshot)
         containerView.addSubview(labelSnapshot)
         containerView.addSubview(detailViewSnapshot)
@@ -111,14 +120,14 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         let preTransitionState = isPresenting ? TransitionState.initial : TransitionState.final
         let postTransitionState = isPresenting ? TransitionState.final : TransitionState.initial
         
-        configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, backgroundLabelTitle), viewsInForeground: (foregroundImageView, foregroundImageView, foregroundLabelTitle), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot))
+        configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, backgroundLabelTitle, backgroundShadowView), viewsInForeground: (foregroundImageView, foregroundImageView, foregroundLabelTitle, backgroundShadowView), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot, shadowViewSnapshot))
         
         foregroundViewController.view.layoutIfNeeded()
         
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0, options: [], animations: {
             
-            self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, backgroundLabelTitle), viewsInForeground: (foregroundImageView, foregroundImageView, foregroundLabelTitle), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot))
+            self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, backgroundLabelTitle, backgroundShadowView), viewsInForeground: (foregroundImageView, foregroundImageView, foregroundLabelTitle, backgroundShadowView), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot, shadowViewSnapshot))
             
             detailViewSnapshot.frame = self.isPresenting ?
                 CGRect(x: 0,
@@ -134,7 +143,8 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             
             backgroundViewController.view.transform = CGAffineTransform.identity
             
-             imageViewSnapshot.removeFromSuperview()
+            imageViewSnapshot.removeFromSuperview()
+            shadowViewSnapshot.removeFromSuperview()
             labelSnapshot.removeFromSuperview()
             detailViewSnapshot.removeFromSuperview()
             
@@ -143,6 +153,7 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             foregroundLabelTitle.isHidden = false
             backgroundLabelTitle.isHidden = false
             foregroundDetailView.isHidden = false
+            backgroundShadowView.isHidden = false
             
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }

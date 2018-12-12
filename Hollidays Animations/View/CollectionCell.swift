@@ -20,16 +20,19 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
     
     let shadowView: UIView = {
         let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.set(style: .shadow)
         return view
     }()
     let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.set(style: .cell)
         return imageView
     }()
     let titleLabel: UILabel = {
         let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.set(style: .title)
         return label
     }()

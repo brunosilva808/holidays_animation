@@ -22,7 +22,6 @@ extension UIView {
             self.setRoundedCorners(toRadius: 15)
             self.backgroundColor = .white
         case .shadow:
-            self.translatesAutoresizingMaskIntoConstraints = false
             self.backgroundColor = .white
             self.setRoundedCorners(toRadius: 15)
             self.setShadow(color: .black, radius: 5)
