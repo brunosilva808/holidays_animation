@@ -38,14 +38,13 @@ class ZoomTransitioningDelegate: NSObject {
             backgroundViewController.view.alpha = 1
             
             snapshotViews.imageView.frame = containerView.convert(viewsInBackground.imageView.frame, from: viewsInBackground.imageView.superview)
-            snapshotViews.label.frame = containerView.convert(viewsInBackground.label.frame, from: viewsInBackground.label.superview)
-            
+            snapshotViews.label.frame = containerView.convert(viewsInForeground.label.frame, from: viewsInForeground.label.superview)
         case .final:
             backgroundViewController.view.transform = CGAffineTransform(scaleX: backgroundScale, y: backgroundScale)
             backgroundViewController.view.alpha = 0
             
             snapshotViews.imageView.frame = containerView.convert(viewsInForeground.imageView.frame, from: viewsInForeground.imageView.superview)
-            snapshotViews.label.frame = containerView.convert(viewsInForeground.label.frame, from: viewsInForeground.label.superview)
+            snapshotViews.label.frame = containerView.convert(viewsInBackground.label.frame, from: viewsInBackground.label.superview)
         }
     }
 }
@@ -66,22 +65,23 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         
         guard let backgroundImageView = (backgroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
         guard let foregroundImageView = (foregroundViewController as? ZoomingViewController)?.zoomingImageView(for: self) else { return }
+        guard let backgroundLabelTitle = (backgroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
+        guard let foregroundLabelTitle = (foregroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
         guard let foregroundDetailView = (foregroundViewController as? ZoomingViewController)?.zoomingDetailView(for: self) else { return }
-        guard let labelTitleForeground = (backgroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
-        guard let labelTitleBackground = (foregroundViewController as? ZoomingViewController)?.zoomingTitleLabel(for: self) else { return }
         
         backgroundImageView.isHidden = true
         foregroundImageView.isHidden = true
+        backgroundLabelTitle.isHidden = true
+        foregroundLabelTitle.isHidden = true
         foregroundDetailView.isHidden = true
-        labelTitleForeground.isHidden = true
-        labelTitleBackground.isHidden = true
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
         imageViewSnapshot.contentMode = .scaleAspectFill
         imageViewSnapshot.layer.masksToBounds = true
         imageViewSnapshot.setRoundedCorners(toRadius: 15)
 
-        let labelSnapshot = UILabel(frame: labelTitleBackground.frame)
+        let labelSnapshot = UILabel(frame: backgroundLabelTitle.frame)
+        labelSnapshot.textColor = .white
         labelSnapshot.text = "Title 1"
         
         let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
@@ -101,21 +101,21 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
         containerView.addSubview(backgroundViewController.view)
         containerView.addSubview(foregroundViewController.view)
-        containerView.addSubview(labelSnapshot)
         containerView.addSubview(imageViewSnapshot)
+        containerView.addSubview(labelSnapshot)
         containerView.addSubview(detailViewSnapshot)
         
         let preTransitionState = isPresenting ? TransitionState.initial : TransitionState.final
         let postTransitionState = isPresenting ? TransitionState.final : TransitionState.initial
         
-        configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, labelTitleBackground), viewsInForeground: (foregroundImageView, foregroundImageView, labelTitleForeground), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot))
+        configureViews(for: preTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, backgroundLabelTitle), viewsInForeground: (foregroundImageView, foregroundImageView, foregroundLabelTitle), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot))
         
         foregroundViewController.view.layoutIfNeeded()
         
         let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0, options: [], animations: {
             
-            self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, labelTitleBackground), viewsInForeground: (foregroundImageView, foregroundImageView, labelTitleForeground), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot))
+            self.configureViews(for: postTransitionState, containerView: containerView, backgroundViewController: backgroundViewController, viewsInBackground: (backgroundImageView, backgroundImageView, backgroundLabelTitle), viewsInForeground: (foregroundImageView, foregroundImageView, foregroundLabelTitle), snapshotViews: (imageViewSnapshot, imageViewSnapshot, labelSnapshot))
             
             detailViewSnapshot.frame = self.isPresenting ?
                 CGRect(x: 0,
@@ -136,8 +136,8 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
             backgroundImageView.isHidden = false
             foregroundImageView.isHidden = false
             foregroundDetailView.isHidden = false
-            labelTitleForeground.isHidden = false
-            labelTitleBackground.isHidden = false
+            foregroundLabelTitle.isHidden = false
+            backgroundLabelTitle.isHidden = false
             
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
