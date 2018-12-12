@@ -27,8 +27,15 @@ class ZoomTransitioningDelegate: NSObject {
     var operation: UINavigationController.Operation = .none
     var isPresenting: Bool = false
     private let backgroundScale = CGFloat(0.7)
+    var model: Holiday?
     
     typealias ZoomingViews = (otherView: UIView, imageView: UIView, label: UILabel)
+    
+    init(holiday: Holiday) {
+        super.init()
+        
+        self.model = holiday
+    }
     
     func configureViews(for state: TransitionState, containerView: UIView, backgroundViewController: UIViewController, viewsInBackground: ZoomingViews, viewsInForeground: ZoomingViews, snapshotViews: ZoomingViews)
     {
@@ -82,7 +89,8 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
 
         let labelSnapshot = UILabel(frame: backgroundLabelTitle.frame)
         labelSnapshot.textColor = .white
-        labelSnapshot.text = "Title 1"
+        labelSnapshot.font = UIFont.boldSystemFont(ofSize: 21)
+        labelSnapshot.text = self.model?.title
         
         let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
         detailViewSnapshot.backgroundColor = .white
@@ -130,14 +138,16 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         }) { (finished) in
             
             backgroundViewController.view.transform = CGAffineTransform.identity
-            imageViewSnapshot.removeFromSuperview()
+            
+             imageViewSnapshot.removeFromSuperview()
             labelSnapshot.removeFromSuperview()
             detailViewSnapshot.removeFromSuperview()
+            
             backgroundImageView.isHidden = false
             foregroundImageView.isHidden = false
-            foregroundDetailView.isHidden = false
             foregroundLabelTitle.isHidden = false
             backgroundLabelTitle.isHidden = false
+            foregroundDetailView.isHidden = false
             
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
