@@ -15,6 +15,7 @@ class DetailViewController: UIViewController {
             guard let model = self.model else { return }
             imageView.image = UIImage(named: model.imageName)
             titleLabel.text = model.title
+            descriptionLabel.text = model.description
         }
     }
     
@@ -30,15 +31,17 @@ class DetailViewController: UIViewController {
     static let detailViewMargin: CGFloat = 100.0
     let detailView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: detailViewHeight))
-        view.isUserInteractionEnabled = true
-        view.setRoundedCorners(toRadius: 15)
-        view.backgroundColor = .white
+        view.set(style: .detail)
         return view
     }()
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 21)
+        label.set(style: .title)
+        return label
+    }()
+    let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
         return label
     }()
     
@@ -56,6 +59,7 @@ class DetailViewController: UIViewController {
         self.view.addSubview(self.imageView)
         self.view.addSubview(self.detailView)
         self.view.addSubview(self.titleLabel)
+        self.detailView.addSubview(self.descriptionLabel)
         
         self.view.addConstraintsWithFormat("H:|[v0]|", views: imageView)
         self.view.addConstraintsWithFormat("V:|[v0]|", views: imageView)
@@ -65,8 +69,11 @@ class DetailViewController: UIViewController {
         self.view.addConstraintsWithFormat("H:|[v0]|", views: detailView)
         self.view.addConstraintsWithFormat("V:[v0(height)]-(-100)-|", views: detailView, metrics: metrics)
         
-        self.view.addConstraintsWithFormat("H:|-32-[v0]-32-|", views: titleLabel)
+        self.view.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: titleLabel)
         self.view.addConstraintsWithFormat("V:[v0]-32-[v1]", views: titleLabel, detailView)
+        
+        self.detailView.addConstraintsWithFormat("H:|-16-[v0]-16-|", views: descriptionLabel)
+        self.detailView.addConstraintsWithFormat("V:|-16-[v0]", views: descriptionLabel)
     }
 
     @objc func imageTouched() {
@@ -80,6 +87,10 @@ class DetailViewController: UIViewController {
 }
 
 extension DetailViewController: ZoomingViewController {
+    func zoomingShadowView(for transition: ZoomTransitioningDelegate) -> UIView? {
+        return nil
+    }
+    
     func zoomingTitleLabel(for transition: ZoomTransitioningDelegate) -> UILabel? {
         return self.titleLabel
     }

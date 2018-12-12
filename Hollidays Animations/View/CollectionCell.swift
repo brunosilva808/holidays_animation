@@ -21,22 +21,19 @@ class CollectionCell: UICollectionViewCell, ModelPresenterCell {
     let shadowView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        view.setRoundedCorners(toRadius: 15)
-        view.setShadow(color: .black, radius: 5)
+        view.set(style: .shadow)
         return view
     }()
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.setRoundedCorners(toRadius: 15)
-        imageView.contentMode = .scaleAspectFill
+        imageView.set(style: .cell)
         return imageView
     }()
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 21)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.set(style: .title)
         return label
     }()
     

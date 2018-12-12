@@ -8,7 +8,26 @@
 
 import UIKit
 
+enum UIViewStyle {
+    case detail
+    case shadow
+}
+
 extension UIView {
+    
+    func set(style: UIViewStyle) {
+        switch style {
+        case .detail:
+            self.isUserInteractionEnabled = true
+            self.setRoundedCorners(toRadius: 15)
+            self.backgroundColor = .white
+        case .shadow:
+            self.backgroundColor = .white
+            self.setRoundedCorners(toRadius: 15)
+            self.setShadow(color: .black, radius: 5)
+        }
+    }
+    
     func addConstraintsWithFormat(_ format: String, views: UIView..., metrics: [String: Any]? = nil) {
         var viewsDictionary = [String: UIView]()
         for (index, view) in views.enumerated() {
