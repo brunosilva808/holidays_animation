@@ -83,19 +83,14 @@ extension ZoomTransitioningDelegate: UIViewControllerAnimatedTransitioning {
         foregroundDetailView.isHidden = true
         
         let imageViewSnapshot = UIImageView(image: backgroundImageView.image)
-        imageViewSnapshot.contentMode = .scaleAspectFill
-        imageViewSnapshot.layer.masksToBounds = true
-        imageViewSnapshot.setRoundedCorners(toRadius: 15)
-
+        imageViewSnapshot.set(style: .cell)
+        
         let labelSnapshot = UILabel(frame: backgroundLabelTitle.frame)
-        labelSnapshot.textColor = .white
-        labelSnapshot.font = UIFont.boldSystemFont(ofSize: 21)
+        labelSnapshot.set(style: .title)
         labelSnapshot.text = self.model?.title
         
         let detailViewSnapshot = UIView(frame: foregroundDetailView.frame)
-        detailViewSnapshot.backgroundColor = .white
-        detailViewSnapshot.layer.masksToBounds = true
-        detailViewSnapshot.setRoundedCorners(toRadius: 15)
+        detailViewSnapshot.set(style: .detail)
         detailViewSnapshot.frame = isPresenting ?
             CGRect(x: 0,
                    y: UIScreen.main.bounds.height,

@@ -30,9 +30,7 @@ class DetailViewController: UIViewController {
     static let detailViewMargin: CGFloat = 100.0
     let detailView: UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: detailViewHeight))
-        view.isUserInteractionEnabled = true
-        view.setRoundedCorners(toRadius: 15)
-        view.backgroundColor = .white
+        view.set(style: .detail)
         return view
     }()
     let titleLabel: UILabel = {
